@@ -56,19 +56,22 @@ public class ExacAnnotator
 	public static final String EXAC_FILE_LOCATION_PROPERTY = "exac_location";
 	public static final String EXAC_TABIX_RESOURCE = "EXACTabixResource";
 
+	private static final Logger LOG = LoggerFactory.getLogger(ExacAnnotator.class);
+	
 	@Autowired
 	private MolgenisSettings molgenisSettings;
 	@Autowired
 	private DataService dataService;
 	@Autowired
 	private Resources resources;
+	
 
 	@Bean
 	public RepositoryAnnotator exac()
 	{
 		List<AttributeMetaData> attributes = new ArrayList<>();
 
-		DefaultAttributeMetaData exac_ac = new DefaultAttributeMetaData(EXAC_AC, FieldTypeEnum.DECIMAL).setDescription(
+		DefaultAttributeMetaData exac_ac = new DefaultAttributeMetaData(EXAC_AC, FieldTypeEnum.INT).setDescription(
 				"Allele count in genotypes derived straight from the ExAC AC field").setLabel(EXAC_AC_LABEL);
 
 		DefaultAttributeMetaData exac_gmaf = new DefaultAttributeMetaData(EXAC_GMAF, FieldTypeEnum.DECIMAL)
@@ -100,6 +103,7 @@ public class ExacAnnotator
 				.setDescription("European American minor allele frequency derived straight from the ExAC AE_MAF field")
 				.setLabel(EXAC_EA_MAF_LABEL);
 
+		attributes.add(exac_ac);
 		attributes.add(exac_gmaf);
 		attributes.add(exac_afr_maf);
 		attributes.add(exac_amr_maf);
@@ -118,7 +122,7 @@ public class ExacAnnotator
 								+ " on this website spans 60,706 unrelated individuals sequenced as part of various "
 								+ "disease-specific and population genetic studies. ", attributes);
 		EntityAnnotator entityAnnotator = new AnnotatorImpl(EXAC_TABIX_RESOURCE, exacInfo, new LocusQueryCreator(),
-				new VariantResultFilter(), dataService, resources);
+				new ExacResultFilter(attributes), dataService, resources);
 
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
@@ -127,10 +131,10 @@ public class ExacAnnotator
 	Resource exacResource()
 	{
 		Resource exacTabixResource = null;
-
+		
 		exacTabixResource = new ResourceImpl(EXAC_TABIX_RESOURCE, new SingleResourceConfig(EXAC_FILE_LOCATION_PROPERTY,
 				molgenisSettings), new TabixVcfRepositoryFactory(EXAC_TABIX_RESOURCE));
-
+		
 		return exacTabixResource;
 	}
 }

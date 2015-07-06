@@ -125,6 +125,7 @@ public class CmdLineAnnotator
 		{
 			Map<String, RepositoryAnnotator> annotators = applicationContext.getBeansOfType(RepositoryAnnotator.class);
 			RepositoryAnnotator annotator = annotators.get("exac");
+			
 			annotate(annotator, inputVcfFile, outputVCFFile);
 		}
 		else if (annotatorName.equals("1kg"))
