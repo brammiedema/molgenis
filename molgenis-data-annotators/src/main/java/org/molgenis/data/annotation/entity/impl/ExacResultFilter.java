@@ -100,26 +100,9 @@ public class ExacResultFilter implements ResultFilter
 		newEntity.set("EXAC_AA_MAF", aaMaf );
 		newEntity.set("EXAC_EA_MAF", eaMaf );
 		newEntity.set("EXAC_AC", ac );
-//public static final String EXAC_AC = "EXAC_ALLELE_COUNT";
-//		public static final String EXAC_AC_LABEL = "EXACALLELECOUNT";
-//		public static final String EXAC_GMAF = "EXAC_GMAF";
-//		public static final String EXAC_GMAF_LABEL = "EXACGMAF";
-//		public static final String EXAC_AFR_MAF = "EXAC_AFR_MAF";
-//		public static final String EXAC_AFR_MAF_LABEL = "EXACAFRMAF";
-//		public static final String EXAC_AMR_MAF = "EXAC_AMR_MAF";
-//		public static final String EXAC_AMR_MAF_LABEL = "EXACAMRMAF";
-//		public static final String EXAC_ASN_MAF = "EXAC_ASN_MAF";
-//		public static final String EXAC_ASN_MAF_LABEL = "EXACASNMAF";
-//		public static final String EXAC_EUR_MAF = "EXAC_EUR_MAF";
-//		public static final String EXAC_EUR_MAF_LABEL = "EXACEURMAF";
-//		public static final String EXAC_AA_MAF = "EXAC_AA_MAF";
-//		public static final String EXAC_AA_MAF_LABEL = "EXACAAMAF";
-//		public static final String EXAC_EA_MAF = "EXAC_EA_MAF";
-//		public static final String EXAC_EA_MAF_LABEL = "EXACEAMAF";
-		//voeg aan lijstje toe
+
 		newEntities.add(newEntity);
 	} 
-	//vul newEntity met de gesplitte resultaten uit results
 	
 	
 	return FluentIterable.from(newEntities).filter(result -> StringUtils.equals(result.getString(VcfRepository.REF),

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.common.collect.Lists;
 import org.elasticsearch.common.collect.Iterables;
 import org.molgenis.MolgenisFieldTypes;
 import org.molgenis.data.AttributeMetaData;
@@ -108,6 +107,10 @@ public class VcfUtils
 							sampleColumn.append(sample.getString(sampleAttribute));
 							sampleColumn.append(":");
 						}
+						else
+						{
+							sampleColumn.append(".:");
+						}
 
 						// get FORMAT fields, but only for the first time
 						if (firstSample)
@@ -155,8 +158,8 @@ public class VcfUtils
 	 * @throws Exception
 	 */
 	public static boolean checkPreviouslyAnnotatedAndAddMetadata(File inputVcfFile, PrintWriter outputVCFWriter,
-			List<AttributeMetaData> infoFields, String checkAnnotatedBeforeValue) throws MolgenisInvalidFormatException,
-			FileNotFoundException
+			List<AttributeMetaData> infoFields, String checkAnnotatedBeforeValue)
+			throws MolgenisInvalidFormatException, FileNotFoundException
 	{
 		boolean annotatedBefore = false;
 
@@ -251,8 +254,11 @@ public class VcfUtils
 								// type and nillable
 		sb.append(",Type=");
 		sb.append(toVcfDataType(infoAttributeMetaData.getDataType().getEnumType()));
-		sb.append(",Description=");
-		sb.append(infoAttributeMetaData.getDescription());
+		sb.append(",Description=\"");
+		// http://samtools.github.io/hts-specs/VCFv4.1.pdf --> "The Description value must be surrounded by
+		// double-quotes. Double-quote character can be escaped with backslash \ and backslash as \\."
+		sb.append(infoAttributeMetaData.getDescription().replace("\\", "\\\\").replace("\"", "\\\""));
+		sb.append("\">");
 		return sb.toString();
 	}
 
