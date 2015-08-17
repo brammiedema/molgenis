@@ -1,7 +1,6 @@
 package org.molgenis.data.annotation.entity.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.molgenis.MolgenisFieldTypes.FieldTypeEnum;
@@ -13,7 +12,6 @@ import org.molgenis.data.annotation.entity.AnnotatorInfo;
 import org.molgenis.data.annotation.entity.AnnotatorInfo.Status;
 import org.molgenis.data.annotation.entity.EntityAnnotator;
 import org.molgenis.data.annotation.filter.ClinvarMultiAllelicResultFilter;
-import org.molgenis.data.annotation.filter.MultiAllelicResultFilter;
 import org.molgenis.data.annotation.query.LocusQueryCreator;
 import org.molgenis.data.annotation.resources.Resource;
 import org.molgenis.data.annotation.resources.Resources;
@@ -47,6 +45,12 @@ public class ClinvarAnnotator
 	@Autowired
 	private Resources resources;
 
+	/**
+	 * Creates a Clinvar repository annotator class at bean creation.
+	 * This annotator can be used to link ClinVar data to another {@link org.molgenis.data.Entity}
+	 * 
+	 * @return {@link org.molgenis.data.annotation.RepositoryAnnotator}
+	 */
 	@Bean
 	public RepositoryAnnotator clinvar()
 	{
@@ -83,10 +87,17 @@ public class ClinvarAnnotator
 		EntityAnnotator entityAnnotator = new AnnotatorImpl(CLINVAR_TABIX_RESOURCE, clinvarInfo, locusQueryCreator,
 				clinvarMultiAllelicResultFilter, dataService, resources)
 		{
+			/**
+			 * Returns value according to attribute metadata from sourceEntity
+			 * 
+			 * @return Object
+			 */
 			@Override
 			protected Object getResourceAttributeValue(AttributeMetaData attr, Entity sourceEntity)
 			{
+			
 				String attrName = null;
+				// maps correct value to correct attribute meta data
 				if (CLINVAR_CLNSIG.equals(attr.getName())){
 					attrName = CLINVAR_CLNSIG_ResourceAttributeName;
 				}else if(CLINVAR_CLNALLE.equals(attr.getName())){
@@ -102,6 +113,12 @@ public class ClinvarAnnotator
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
 
+	/**
+	 * Sets a resource to handle ClinVar data.
+	 * This resource can be used to query ClinVar data within the annotator framework.
+	 * 
+	 * @return {@link org.molgenis.data.annotation.resources.Resource}
+	 */
 	@Bean
 	Resource clinVarTabixResource()
 	{

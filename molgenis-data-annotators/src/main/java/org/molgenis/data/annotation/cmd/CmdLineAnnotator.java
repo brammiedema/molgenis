@@ -176,7 +176,8 @@ public class CmdLineAnnotator
 		}
 		else if (annotatorName.equals("gonl"))
 		{
-			molgenisSettings.setProperty(GoNLAnnotator.GONL_ROOT_DIRECTORY_PROPERTY, annotationSourceFile.getAbsolutePath());
+			molgenisSettings.setProperty(GoNLAnnotator.GONL_ROOT_DIRECTORY_PROPERTY,
+					annotationSourceFile.getAbsolutePath());
 			molgenisSettings.setProperty(GoNLAnnotator.GONL_FILE_PATTERN_PROPERTY, "gonl.chr%s.snps_indels.r5.vcf.gz");
 			molgenisSettings.setProperty(GoNLAnnotator.GONL_OVERRIDE_CHROMOSOME_FILES_PROPERTY,
 					"X:gonl.chrX.release4.gtc.vcf.gz");
@@ -202,8 +203,11 @@ public class CmdLineAnnotator
 			molgenisSettings.setProperty(ThousandGenomesAnnotator.THOUSAND_GENOME_FILE_PATTERN_PROPERTY,
 					"ALL.chr%s.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz");
 			molgenisSettings.setProperty(ThousandGenomesAnnotator.THOUSAND_GENOME_CHROMOSOME_PROPERTY,
-					"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22");
-
+					"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y");
+			molgenisSettings
+					.setProperty(
+							ThousandGenomesAnnotator.THOUSAND_GENOME_OVERRIDE_CHROMOSOME_FILES_PROPERTY,
+							"X:ALL.chrX.phase3_shapeit2_mvncall_integrated.20130502.genotypes.vcf.gz,Y:ALL.chrY.phase3_integrated.20130502.genotypes.vcf.gz");
 			Map<String, RepositoryAnnotator> annotators = applicationContext.getBeansOfType(RepositoryAnnotator.class);
 			RepositoryAnnotator annotator = annotators.get("thousandGenomes");
 			annotate(annotator, inputVcfFile, outputVCFFile);

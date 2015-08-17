@@ -1,11 +1,8 @@
 package org.molgenis.data.annotation.filter;
 
-import static org.molgenis.data.vcf.VcfRepository.ALT;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +11,6 @@ import org.elasticsearch.common.collect.Lists;
 import org.molgenis.data.AttributeMetaData;
 import org.molgenis.data.Entity;
 import org.molgenis.data.annotation.entity.ResultFilter;
-import org.molgenis.data.annotation.entity.impl.ClinvarAnnotator;
 import org.molgenis.data.vcf.VcfRepository;
 
 import com.google.common.base.Optional;
@@ -29,6 +25,17 @@ public class ClinvarMultiAllelicResultFilter implements ResultFilter
 		return Arrays.asList(VcfRepository.REF_META, VcfRepository.ALT_META);
 	}
 
+	/**
+	 * @param {@link Iterable}<{@link org.molgenis.data.Entity}> results
+	 * @param {@link org.molgenis.data.Entity} annotatedEntity
+	 * 
+	 * Filters the results and maps relevant results according to the annotatedEntity.
+	 * 
+	 * NOTE:
+	 * This filter is build specifically for the ClinVar annotator usage in other annotators may results in undesired effects
+	 * 
+	 * @return {@link com.google.common.base.Optional}<{@link org.molgenis.data.Entity}>
+	 */
 	@Override
 	public Optional<Entity> filterResults(Iterable<Entity> results, Entity annotatedEntity)
 	{
@@ -43,23 +50,21 @@ public class ClinvarMultiAllelicResultFilter implements ResultFilter
 				String[] alts = entity.getString(VcfRepository.ALT).split(",");
 				String[] clnSigs = entity.getString("INFO_CLNSIG").split(",");
 				String[] clnAll = entity.getString("INFO_CLNALLE").split(",");
-				System.out.println("alts: " + Lists.newArrayList(alts));
-				System.out.println("clnsigs: " + Lists.newArrayList(clnSigs));
-				System.out.println("clnals: " + Lists.newArrayList(clnAll));
-				System.out.println("source: " + annotatedEntity);
+
+
 				StringBuilder newClnlallAttributeValue = new StringBuilder();
 				StringBuilder newClnlsigAttributeValue = new StringBuilder();
 				String[] annotatedEntityAltAlleles = annotatedEntity.getString(VcfRepository.ALT).split(",");
-				// sometimes the clnsig is not defined for all alternative alleles
+				// sometimes clnsig is not defined for all alternative alleles
 				// so we need to check this and just add what we have
 				for (int i = 0; i < clnSigs.length; i++)
 				{
 					int significantAlleleIndex = Integer.parseInt(clnAll[i]);
 
-					// this means the no allele is associated with the gene of interest
+					// -1 means the no allele is associated with the gene of interest
 					if (significantAlleleIndex == -1) continue;
 
-					// this means the allele is based on the reference
+					// 0 means the allele is based on the reference
 					else if (significantAlleleIndex == 0)
 					{
 
@@ -90,8 +95,8 @@ public class ClinvarMultiAllelicResultFilter implements ResultFilter
 
 								String newSignificantAlleleIndex = Integer.toString(j + 1);
 
-								clnallValueMap.put(alts[significantAlleleIndex], newSignificantAlleleIndex); // 1,2
-								clnsigValueMap.put(alts[significantAlleleIndex], clnSigs[i]); // "5,4"
+								clnallValueMap.put(alts[significantAlleleIndex], newSignificantAlleleIndex); 
+								clnsigValueMap.put(alts[significantAlleleIndex], clnSigs[i]); 
 
 							}
 						}
@@ -134,7 +139,6 @@ public class ClinvarMultiAllelicResultFilter implements ResultFilter
 				}
 				else
 				{
-
 					entity.set("INFO_CLNALLE", newClnlallAttributeValue.toString());
 					entity.set("INFO_CLNSIG", newClnlsigAttributeValue.toString());
 

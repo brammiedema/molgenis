@@ -46,6 +46,12 @@ public class DannAnnotator
 	@Autowired
 	private Resources resources;
 
+	/**
+	 * Creates a DANN repository annotator class at bean creation.
+	 * This annotator can be used to link DANN data to another {@link org.molgenis.data.Entity}
+	 * 
+	 * @return {@link org.molgenis.data.annotation.RepositoryAnnotator}
+	 */
 	@Bean
 	public RepositoryAnnotator dann()
 	{
@@ -85,6 +91,12 @@ public class DannAnnotator
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
 
+	/**
+	 * Sets a resource to handle DANN data.
+	 * This resource can be used to query DANN data within the annotator framework.
+	 * 
+	 * @return {@link org.molgenis.data.annotation.resources.Resource}
+	 */
 	@Bean
 	Resource dannResource()
 	{

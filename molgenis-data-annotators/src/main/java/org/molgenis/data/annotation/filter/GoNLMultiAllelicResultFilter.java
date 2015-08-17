@@ -34,6 +34,14 @@ public class GoNLMultiAllelicResultFilter implements ResultFilter
 		return Arrays.asList(VcfRepository.REF_META, VcfRepository.ALT_META);
 	}
 
+	/**
+	 * @param {@link Iterable}<{@link org.molgenis.data.Entity}> results
+	 * @param {@link org.molgenis.data.Entity} annotatedEntity
+	 * 
+	 * Filters the results and maps relevant results according to the annotatedEntity.
+	 * 
+	 * @return {@link com.google.common.base.Optional}<{@link org.molgenis.data.Entity}>
+	 */
 	@Override
 	public Optional<Entity> filterResults(Iterable<Entity> results, Entity annotatedEntity)
 	{
@@ -69,6 +77,7 @@ public class GoNLMultiAllelicResultFilter implements ResultFilter
 					{
 						if (alt.equals(annotatedEntityAltAllele))
 						{
+							// calculate allele frequency from total alleles / observed allele counts
 							goNlAlleleFrequency = Double.parseDouble(goNlAlleleCounts)
 									/ Double.parseDouble(goNlAlleleNumber);
 							goNlGenoTypeCountsMap.put(alt, goNlGenoTypeCounts);

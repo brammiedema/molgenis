@@ -57,6 +57,12 @@ public class GoNLAnnotator
 	@Autowired
 	private Resources resources;
 
+	/**
+	 * Creates a GoNL repository annotator class at bean creation.
+	 * This annotator can be used to link GoNL data to another {@link org.molgenis.data.Entity}
+	 * 
+	 * @return {@link org.molgenis.data.annotation.RepositoryAnnotator}
+	 */
 	@Bean
 	public RepositoryAnnotator gonl()
 	{
@@ -87,13 +93,16 @@ public class GoNLAnnotator
 
 		LocusQueryCreator locusQueryCreator = new LocusQueryCreator();
 
-		// TODO: properly test multiAllelicFresultFilter
 		GoNLMultiAllelicResultFilter goNLMultiAllelicResultFilter = new GoNLMultiAllelicResultFilter();
 
 		EntityAnnotator entityAnnotator = new AnnotatorImpl(GONL_MULTI_FILE_RESOURCE, thousandGenomeInfo,
 				locusQueryCreator, goNLMultiAllelicResultFilter, dataService, resources)
 		{
-
+			/**
+			 * Returns value according to attribute metadata from sourceEntity
+			 * 
+			 * @return Object
+			 */
 			@Override
 			protected Object getResourceAttributeValue(AttributeMetaData attr, Entity entity)
 			{
@@ -119,6 +128,12 @@ public class GoNLAnnotator
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
 
+	/**
+	 * Sets a resource to handle GoNL data.
+	 * This resource can be used to query GoNL data within the annotator framework.
+	 * 
+	 * @return {@link org.molgenis.data.annotation.resources.Resource}
+	 */
 	@Bean
 	Resource gonlresources()
 	{

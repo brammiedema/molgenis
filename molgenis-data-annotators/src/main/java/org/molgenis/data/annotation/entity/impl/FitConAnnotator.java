@@ -45,6 +45,12 @@ public class FitConAnnotator
 	@Autowired
 	private Resources resources;
 
+	/**
+	 * Creates a FitCon repository annotator class at bean creation.
+	 * This annotator can be used to link Fitcon data to another {@link org.molgenis.data.Entity}
+	 * 
+	 * @return {@link org.molgenis.data.annotation.RepositoryAnnotator}
+	 */
 	@Bean
 	public RepositoryAnnotator fitcon()
 	{
@@ -82,6 +88,12 @@ public class FitConAnnotator
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
 
+	/**
+	 * Sets a resource to handle FitCon data.
+	 * This resource can be used to query FitCon data within the annotator framework.
+	 * 
+	 * @return {@link org.molgenis.data.annotation.resources.Resource}
+	 */
 	@Bean
 	Resource fitconResource()
 	{

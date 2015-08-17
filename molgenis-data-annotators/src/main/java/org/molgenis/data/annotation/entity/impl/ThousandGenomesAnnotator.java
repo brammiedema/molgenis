@@ -46,6 +46,12 @@ public class ThousandGenomesAnnotator
 	@Autowired
 	private Resources resources;
 
+	/**
+	 * Creates a 1000G repository annotator class at bean creation.
+	 * This annotator can be used to link 1000G data to another {@link org.molgenis.data.Entity}
+	 * 
+	 * @return {@link org.molgenis.data.annotation.RepositoryAnnotator}
+	 */
 	@Bean
 	public RepositoryAnnotator thousandGenomes()
 	{
@@ -89,6 +95,12 @@ public class ThousandGenomesAnnotator
 		return new RepositoryAnnotatorImpl(entityAnnotator);
 	}
 
+	/**
+	 * Sets a resource to handle 1000G data.
+	 * This resource can be used to query 1000G data within the annotator framework.
+	 * 
+	 * @return {@link org.molgenis.data.annotation.resources.Resource}
+	 */
 	@Bean
 	Resource thousandGenomesSources()
 	{
